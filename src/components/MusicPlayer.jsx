@@ -4,18 +4,44 @@ import beethovenAudio from '../assets/audio/Beethoven.mp3';
 
 export default function MusicPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
-  // Using HTML5 audio API
   const audioRef = useRef(null);
+  const wasPlayingRef = useRef(false);
 
   useEffect(() => {
     // This uses a generic royalty-free lofi/romantic track placeholder
-    // In a real scenario, this would be imported locally from assets/audio/
     audioRef.current = new Audio(beethovenAudio);
     audioRef.current.loop = true;
     audioRef.current.volume = 0.3;
 
+    const handleForcePause = () => {
+      // Check if it's currently actually playing
+      if (audioRef.current && !audioRef.current.paused) {
+        wasPlayingRef.current = true;
+        audioRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        wasPlayingRef.current = false;
+      }
+    };
+
+    const handleForceResume = () => {
+      // Only resume if it was forcefully paused while playing
+      if (audioRef.current && wasPlayingRef.current) {
+        audioRef.current.play().catch(e => console.log("Audio play failed:", e));
+        setIsPlaying(true);
+        wasPlayingRef.current = false;
+      }
+    };
+
+    window.addEventListener('bg-music-pause', handleForcePause);
+    window.addEventListener('bg-music-resume', handleForceResume);
+
     return () => {
-      audioRef.current.pause();
+      window.removeEventListener('bg-music-pause', handleForcePause);
+      window.removeEventListener('bg-music-resume', handleForceResume);
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
     };
   }, []);
 
@@ -25,6 +51,8 @@ export default function MusicPlayer() {
     } else {
       audioRef.current.play().catch(e => console.log("Audio play failed:", e));
     }
+    // Manual toggle resets the automatic resume condition
+    wasPlayingRef.current = false;
     setIsPlaying(!isPlaying);
   };
 

@@ -1,5 +1,8 @@
 import { motion } from "framer-motion";
 import { memories } from "../data/memories";
+import { useState, useRef } from "react";
+import { Play, Pause, Music } from "lucide-react";
+import humMilengeAudio from '../assets/audio/Hum-milenge.mp3';
 
 export default function Timeline() {
   return (
@@ -22,31 +25,7 @@ export default function Timeline() {
           ))}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="text-center mt-20 text-2xl text-pink-200 italic"
-        >
-          " Hum milenge baagh mein, gaon mein, dhoop mein, chhaon mein, ret
-          mein, dasht mein,
-          <br />
-          Shehar mein, masjidon mein, kaleeson mein, mandir mein, mehrab mein,
-          church mein,
-          <br />
-          Moosalaadhar baarish mein, bazaar mein, khwaab mein, aag mein, gehre
-          paani mein,
-          <br />
-          Galiyon mein, jungle mein aur aasmanon mein
-          <br />
-          <br />
-          Kono makaan se pare, gair-aabaad sayyara-e-aarzoo mein sadiyon se
-          khaali padi bench par
-          <br />
-          Jahan maut bhi hum se dast-o-garebaan hogi,
-          <br />
-          To bas ek do din ki mehmaan hogi";
-        </motion.div>
+        <TimelineMusicPlayer />
       </div>
     </div>
   );
@@ -121,6 +100,70 @@ function TimelineItem({ memory, index }) {
         <span className="text-pink-200 font-semibold text-xl bg-slate-900/60 px-6 py-2 rounded-full border border-pink-500/40 shadow-lg backdrop-blur-md">
           {memory.date}
         </span>
+      </div>
+    </motion.div>
+  );
+}
+
+function TimelineMusicPlayer() {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef(null);
+
+  const togglePlay = () => {
+    if (isPlaying) {
+      audioRef.current.pause();
+      window.dispatchEvent(new CustomEvent('bg-music-resume'));
+    } else {
+      audioRef.current.play();
+      window.dispatchEvent(new CustomEvent('bg-music-pause'));
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  const handleEnded = () => {
+    setIsPlaying(false);
+    window.dispatchEvent(new CustomEvent('bg-music-resume'));
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="mt-20 max-w-sm mx-auto bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 shadow-2xl flex flex-col items-center relative overflow-hidden"
+    >
+      {/* Decorative background glow */}
+      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-pink-500/10 to-purple-500/10 z-0"></div>
+      
+      <div className="relative z-10 flex flex-col items-center w-full">
+        <div className="w-20 h-20 bg-gradient-to-tr from-pink-500 to-purple-600 rounded-full flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(236,72,153,0.5)]">
+          <Music className="w-10 h-10 text-white" />
+        </div>
+        
+        <h3 className="text-2xl font-bold text-white mb-2 tracking-wide text-center drop-shadow-md">Play it!</h3>
+        <p className="text-pink-200/80 text-sm mb-8 text-center px-4">
+          A special <code className="bg-black/30 px-2 py-1 rounded text-xs">Message</code>  For you !!
+        </p>
+        
+        {/* The Audio Element */}
+        <audio 
+          ref={audioRef} 
+          src={humMilengeAudio} 
+          loop={false}
+          onEnded={handleEnded}
+        />
+
+        {/* Play/Pause Button */}
+        <button
+          onClick={togglePlay}
+          className="w-16 h-16 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full flex items-center justify-center transition-all focus:outline-none focus:ring-2 focus:ring-pink-500/50 group shadow-lg backdrop-blur-md"
+        >
+          {isPlaying ? (
+            <Pause className="text-white fill-white w-7 h-7 group-hover:scale-110 transition-transform" />
+          ) : (
+            <Play className="text-white fill-white ml-2 w-8 h-8 group-hover:scale-110 transition-transform" />
+          )}
+        </button>
       </div>
     </motion.div>
   );
