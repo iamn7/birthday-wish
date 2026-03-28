@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
+import beethovenAudio from '../assets/audio/Beethoven.mp3';
 
 export default function MusicPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -9,7 +10,7 @@ export default function MusicPlayer() {
   useEffect(() => {
     // This uses a generic royalty-free lofi/romantic track placeholder
     // In a real scenario, this would be imported locally from assets/audio/
-    audioRef.current = new Audio('https://cdn.pixabay.com/download/audio/2022/05/16/audio_9b19e918ab.mp3?filename=lofi-study-112191.mp3');
+    audioRef.current = new Audio(beethovenAudio);
     audioRef.current.loop = true;
     audioRef.current.volume = 0.3;
 
