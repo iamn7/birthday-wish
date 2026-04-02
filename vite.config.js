@@ -4,4 +4,19 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-motion': ['framer-motion'],
+          'vendor-ui': ['lucide-react', 'canvas-confetti'],
+        }
+      }
+    },
+    chunkSizeWarningLimit: 600,
+  },
+  optimizeDeps: {
+    include: ['framer-motion', 'lucide-react', 'canvas-confetti'],
+  }
 })

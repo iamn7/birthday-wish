@@ -1,24 +1,56 @@
-import { motion } from "framer-motion";
-import { memories } from "../data/memories";
-import { useState, useRef } from "react";
-import { Play, Pause, Music } from "lucide-react";
+import { motion } from 'framer-motion';
+import { memories } from '../data/memories';
+import { useState, useRef } from 'react';
+import { Play, Pause, Music } from 'lucide-react';
 import humMilengeAudio from '../assets/audio/Bohat.mp3';
 
 export default function Timeline() {
   return (
-    <div className="min-h-screen py-24 px-4 bg-gradient-to-b from-indigo-900 to-pink-900 relative">
+    <div
+      className="min-h-screen py-28 px-4 relative"
+      style={{ background: 'linear-gradient(180deg, #0d0521 0%, #1a0533 30%, #1d0838 60%, #0d1030 100%)' }}
+    >
+      {/* Ambient top glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60vw] h-64 bg-pink-600/8 rounded-full blur-[80px] pointer-events-none" />
+
       <div className="max-w-4xl mx-auto">
-        <motion.h1
+        {/* Section heading */}
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-4xl md:text-5xl font-bold text-center text-white mb-16 drop-shadow-md"
+          transition={{ duration: 0.8 }}
+          className="text-center mb-20"
         >
-          Our Beautiful Journey
-        </motion.h1>
+          <span
+            className="inline-block text-xs font-semibold tracking-[0.25em] uppercase mb-4 px-4 py-1.5 rounded-full"
+            style={{
+              background: 'rgba(236,72,153,0.1)',
+              border: '1px solid rgba(236,72,153,0.2)',
+              color: 'rgba(249,168,212,0.8)',
+            }}
+          >
+            ✦ &nbsp; Our Story &nbsp; ✦
+          </span>
+          <h1
+            className="text-4xl md:text-5xl font-display font-bold"
+            style={{
+              background: 'linear-gradient(135deg, #f9a8d4 0%, #e879f9 50%, #c4b5fd 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              filter: 'drop-shadow(0 0 20px rgba(236,72,153,0.3))',
+            }}
+          >
+            Our Beautiful Journey
+          </h1>
+        </motion.div>
 
         <div className="relative">
-          {/* Central Line */}
-          <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-1 bg-pink-500/30 h-full rounded-full" />
+          {/* Central line */}
+          <div
+            className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-px h-full"
+            style={{ background: 'linear-gradient(to bottom, transparent, rgba(236,72,153,0.3) 10%, rgba(168,85,247,0.3) 50%, rgba(236,72,153,0.3) 90%, transparent)' }}
+          />
 
           {memories.map((mem, index) => (
             <TimelineItem key={mem.id} memory={mem} index={index} />
@@ -36,68 +68,106 @@ function TimelineItem({ memory, index }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 50 }}
+      initial={{ opacity: 0, y: 60 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.8 }}
-      className={`relative flex flex-col md:flex-row items-center w-full my-16 ${isEven ? "md:flex-row-reverse" : ""}`}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.75, ease: 'easeOut' }}
+      className={`relative flex flex-col md:flex-row items-center w-full my-14 ${isEven ? 'md:flex-row-reverse' : ''}`}
     >
-      {/* Date badge on small screens */}
-      <div className="md:hidden text-pink-300 font-medium mb-3 text-lg drop-shadow-md">
-        {memory.date}
+      {/* Mobile date */}
+      <div className="md:hidden mb-3">
+        <span
+          className="text-sm font-semibold px-4 py-1.5 rounded-full"
+          style={{
+            background: 'rgba(236,72,153,0.12)',
+            border: '1px solid rgba(236,72,153,0.25)',
+            color: 'rgba(249,168,212,0.85)',
+          }}
+        >
+          {memory.date}
+        </span>
       </div>
 
-      {/* Content */}
-      <div className="w-full md:w-1/2 px-2 md:px-4">
-        <div
-          className={`relative group overflow-hidden rounded-2xl border border-white/20 shadow-[-10px_10px_30px_rgba(0,0,0,0.5)] ${isEven ? "md:ml-8" : "md:mr-8"}`}
+      {/* Card */}
+      <div className="w-full md:w-1/2 px-2 md:px-5">
+        <motion.div
+          whileHover={{ scale: 1.01 }}
+          transition={{ duration: 0.3 }}
+          className={`relative group overflow-hidden rounded-3xl ${isEven ? 'md:ml-10' : 'md:mr-10'}`}
+          style={{
+            border: '1px solid rgba(255,255,255,0.1)',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+          }}
         >
-          {/* Blurred cinematic backdrop */}
-          <div className="absolute inset-0 z-0 bg-black/40">
-            <img 
-              src={memory.image} 
-              className="w-full h-full object-cover blur-2xl scale-125 opacity-60 mix-blend-screen" 
-              alt=""
-            />
-          </div>
-          
-          {/* Main Image Container */}
-          <div className="relative z-10 w-full h-[60vh] md:h-[75vh] flex items-center justify-center bg-transparent">
-            <motion.img
-              initial={{ scale: 0.95 }}
-              whileInView={{ scale: 1 }}
-              transition={{ duration: 1, ease: 'easeOut' }}
+          {/* Cinematic blurred backdrop */}
+          <div className="absolute inset-0 z-0 bg-black/50">
+            <img
               src={memory.image}
-              alt={memory.title}
-              className="w-full h-full object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-2 md:p-4"
+              className="w-full h-full object-cover blur-2xl scale-125 opacity-50 mix-blend-screen"
+              alt=""
+              loading="lazy"
+              decoding="async"
             />
           </div>
 
-          {/* Text Overlay (The Emotional Layer) */}
+          {/* Main Image */}
+          <div className="relative z-10 w-full h-[55vh] md:h-[70vh] flex items-center justify-center">
+            <motion.img
+              initial={{ scale: 0.97, opacity: 0.8 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 1.1, ease: 'easeOut' }}
+              src={memory.image}
+              alt={memory.title}
+              className="w-full h-full object-contain p-3 md:p-5 drop-shadow-[0_20px_40px_rgba(0,0,0,0.6)]"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+
+          {/* Text overlay */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.8 }}
-            className="absolute bottom-0 inset-x-0 z-20 bg-gradient-to-t from-black/95 via-black/60 to-transparent p-6 pt-32"
+            transition={{ delay: 0.25, duration: 0.7 }}
+            className="absolute bottom-0 inset-x-0 z-20 p-6 pt-28"
+            style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 50%, transparent 100%)' }}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 drop-shadow-lg tracking-wide">
+            <h2 className="text-2xl md:text-3xl font-display font-bold text-white mb-2 drop-shadow-lg tracking-wide">
               {memory.title}
             </h2>
-            <p className="text-pink-100/95 leading-relaxed text-base md:text-lg drop-shadow-md">
+            <p className="text-pink-100/85 leading-relaxed text-sm md:text-base">
               {memory.caption}
             </p>
           </motion.div>
-        </div>
+
+          {/* Hover glow border */}
+          <div
+            className="absolute inset-0 z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-3xl"
+            style={{ boxShadow: 'inset 0 0 0 1px rgba(236,72,153,0.25)' }}
+          />
+        </motion.div>
       </div>
 
-      {/* Center dot for desktop */}
-      <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 items-center justify-center w-8 h-8 rounded-full bg-pink-500 border-4 border-slate-900 z-10 shadow-[0_0_15px_rgba(236,72,153,0.8)]" />
-
-      {/* Date badge for desktop */}
+      {/* Center dot (desktop) */}
       <div
-        className={`hidden md:flex w-1/2 justify-${isEven ? "start" : "end"} px-12`}
-      >
-        <span className="text-pink-200 font-semibold text-xl bg-slate-900/60 px-6 py-2 rounded-full border border-pink-500/40 shadow-lg backdrop-blur-md">
+        className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 items-center justify-center w-9 h-9 rounded-full z-10"
+        style={{
+          background: 'linear-gradient(135deg, #ec4899, #a855f7)',
+          boxShadow: '0 0 20px rgba(236,72,153,0.7), 0 0 0 4px rgba(15,10,30,1)',
+        }}
+      />
+
+      {/* Desktop date badge */}
+      <div className={`hidden md:flex w-1/2 ${isEven ? 'justify-start pl-14' : 'justify-end pr-14'}`}>
+        <span
+          className="text-sm font-semibold px-5 py-2 rounded-full backdrop-blur-md"
+          style={{
+            background: 'rgba(10,5,25,0.7)',
+            border: '1px solid rgba(236,72,153,0.25)',
+            color: 'rgba(249,168,212,0.9)',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
+          }}
+        >
           {memory.date}
         </span>
       </div>
@@ -127,44 +197,76 @@ function TimelineMusicPlayer() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="mt-20 max-w-sm mx-auto bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 shadow-2xl flex flex-col items-center relative overflow-hidden"
+      className="mt-20 max-w-xs mx-auto rounded-3xl overflow-hidden"
+      style={{
+        background: 'rgba(15,10,30,0.75)',
+        backdropFilter: 'blur(20px)',
+        border: '1px solid rgba(236,72,153,0.2)',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+      }}
     >
-      {/* Decorative background glow */}
-      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-pink-500/10 to-purple-500/10 z-0"></div>
-      
-      <div className="relative z-10 flex flex-col items-center w-full">
-        <div className="w-20 h-20 bg-gradient-to-tr from-pink-500 to-purple-600 rounded-full flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(236,72,153,0.5)]">
-          <Music className="w-10 h-10 text-white" />
-        </div>
-        
-        <h3 className="text-2xl font-bold text-white mb-2 tracking-wide text-center drop-shadow-md">Play it!</h3>
-        <p className="text-pink-200/80 text-sm mb-8 text-center px-4">
-          A special <code className="bg-black/30 px-2 py-1 rounded text-xs">Message</code>  For you !!
-        </p>
-        
-        {/* The Audio Element */}
-        <audio 
-          ref={audioRef} 
-          src={humMilengeAudio} 
-          loop={false}
-          onEnded={handleEnded}
-        />
+      {/* Top accent */}
+      <div
+        className="h-px"
+        style={{ background: 'linear-gradient(90deg, transparent, rgba(236,72,153,0.6), rgba(168,85,247,0.6), transparent)' }}
+      />
 
-        {/* Play/Pause Button */}
-        <button
+      <div className="p-8 flex flex-col items-center">
+        {/* Vinyl disc */}
+        <motion.div
+          animate={isPlaying ? { rotate: 360 } : { rotate: 0 }}
+          transition={{ duration: 4, repeat: isPlaying ? Infinity : 0, ease: 'linear' }}
+          className="w-20 h-20 rounded-full mb-5 flex items-center justify-center relative"
+          style={{
+            background: 'linear-gradient(135deg, #ec4899, #a855f7)',
+            boxShadow: isPlaying ? '0 0 30px rgba(236,72,153,0.5)' : '0 0 20px rgba(0,0,0,0.4)',
+          }}
+        >
+          <Music className="w-9 h-9 text-white/90" />
+          <div className="absolute inset-7 rounded-full bg-slate-900/50 border border-white/10" />
+        </motion.div>
+
+        <h3 className="text-lg font-display font-semibold text-white mb-1">A Message For You</h3>
+        <p className="text-pink-200/50 text-sm mb-7 text-center leading-relaxed">
+          Hit play for something{' '}
+          <span className="text-pink-300/80 font-medium italic">special</span>
+        </p>
+
+        <audio ref={audioRef} src={humMilengeAudio} loop={false} onEnded={handleEnded} />
+
+        {/* Play button */}
+        <motion.button
           onClick={togglePlay}
-          className="w-16 h-16 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full flex items-center justify-center transition-all focus:outline-none focus:ring-2 focus:ring-pink-500/50 group shadow-lg backdrop-blur-md"
+          whileHover={{ scale: 1.07 }}
+          whileTap={{ scale: 0.93 }}
+          className="relative w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300"
+          style={{
+            background: isPlaying
+              ? 'linear-gradient(135deg, rgba(236,72,153,0.3), rgba(168,85,247,0.3))'
+              : 'linear-gradient(135deg, rgba(236,72,153,0.15), rgba(168,85,247,0.15))',
+            border: '1px solid rgba(236,72,153,0.3)',
+            boxShadow: isPlaying ? '0 0 24px rgba(236,72,153,0.4)' : 'none',
+          }}
         >
           {isPlaying ? (
-            <Pause className="text-white fill-white w-7 h-7 group-hover:scale-110 transition-transform" />
+            <Pause className="text-pink-300 fill-pink-300 w-6 h-6" />
           ) : (
-            <Play className="text-white fill-white ml-2 w-8 h-8 group-hover:scale-110 transition-transform" />
+            <Play className="text-pink-300 fill-pink-300 ml-1 w-6 h-6" />
           )}
-        </button>
+          {isPlaying && (
+            <span className="absolute inset-0 rounded-full border border-pink-500/40 animate-ping" />
+          )}
+        </motion.button>
       </div>
+
+      {/* Bottom accent */}
+      <div
+        className="h-px"
+        style={{ background: 'linear-gradient(90deg, transparent, rgba(168,85,247,0.4), transparent)' }}
+      />
     </motion.div>
   );
 }

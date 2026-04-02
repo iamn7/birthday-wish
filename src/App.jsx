@@ -1,15 +1,17 @@
 import { Routes, Route, Outlet } from 'react-router-dom';
-import Home from './pages/Home';
-import Timeline from './pages/Timeline';
-import LoveLetter from './pages/LoveLetter';
-import Surprise from './pages/Surprise';
+import { lazy, Suspense, useState, useEffect } from 'react';
+import Loader from './components/Loader';
 import Navbar from './components/Navbar';
 import MusicPlayer from './components/MusicPlayer';
-import Loader from './components/Loader';
-import { useState, useEffect } from 'react';
-import Login from './pages/Login';
-import BirthdayOnly from './pages/BirthdayOnly';
 import ProtectedRoute from './auth/ProtectedRoute';
+
+// Lazy load all pages for faster initial load
+const Home = lazy(() => import('./pages/Home'));
+const Timeline = lazy(() => import('./pages/Timeline'));
+const LoveLetter = lazy(() => import('./pages/LoveLetter'));
+const Surprise = lazy(() => import('./pages/Surprise'));
+const Login = lazy(() => import('./pages/Login'));
+const BirthdayOnly = lazy(() => import('./pages/BirthdayOnly'));
 
 function MainLayout() {
   return (
@@ -21,14 +23,23 @@ function MainLayout() {
   );
 }
 
+// Mini fallback for Suspense during route transitions
+function PageLoader() {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900">
+      <div className="w-10 h-10 border-t-2 border-pink-500 rounded-full animate-spin" />
+    </div>
+  );
+}
+
 function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate loading time for suspense/assets
+    // Reduced from 2500ms → 1200ms for faster perceived load
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 2500);
+    }, 1200);
     return () => clearTimeout(timer);
   }, []);
 
@@ -38,19 +49,21 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-900 text-white font-sans overflow-x-hidden">
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/birthday" element={<BirthdayOnly />} />
-        
-        <Route element={<ProtectedRoute />}>
-          <Route element={<MainLayout />}>
-            <Route path="/home" element={<Home />} />
-            <Route path="/timeline" element={<Timeline />} />
-            <Route path="/letter" element={<LoveLetter />} />
-            <Route path="/surprise" element={<Surprise />} />
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/birthday" element={<BirthdayOnly />} />
+
+          <Route element={<ProtectedRoute />}>
+            <Route element={<MainLayout />}>
+              <Route path="/home" element={<Home />} />
+              <Route path="/timeline" element={<Timeline />} />
+              <Route path="/letter" element={<LoveLetter />} />
+              <Route path="/surprise" element={<Surprise />} />
+            </Route>
           </Route>
-        </Route>
-      </Routes>
+        </Routes>
+      </Suspense>
     </div>
   );
 }

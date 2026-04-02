@@ -8,13 +8,11 @@ export default function MusicPlayer() {
   const wasPlayingRef = useRef(false);
 
   useEffect(() => {
-    // This uses a generic royalty-free lofi/romantic track placeholder
     audioRef.current = new Audio(beethovenAudio);
     audioRef.current.loop = true;
     audioRef.current.volume = 0.3;
 
     const handleForcePause = () => {
-      // Check if it's currently actually playing
       if (audioRef.current && !audioRef.current.paused) {
         wasPlayingRef.current = true;
         audioRef.current.pause();
@@ -25,9 +23,8 @@ export default function MusicPlayer() {
     };
 
     const handleForceResume = () => {
-      // Only resume if it was forcefully paused while playing
       if (audioRef.current && wasPlayingRef.current) {
-        audioRef.current.play().catch(e => console.log("Audio play failed:", e));
+        audioRef.current.play().catch(e => console.log('Audio play failed:', e));
         setIsPlaying(true);
         wasPlayingRef.current = false;
       }
@@ -49,20 +46,46 @@ export default function MusicPlayer() {
     if (isPlaying) {
       audioRef.current.pause();
     } else {
-      audioRef.current.play().catch(e => console.log("Audio play failed:", e));
+      audioRef.current.play().catch(e => console.log('Audio play failed:', e));
     }
-    // Manual toggle resets the automatic resume condition
     wasPlayingRef.current = false;
     setIsPlaying(!isPlaying);
   };
 
   return (
-    <button 
+    <button
       onClick={togglePlay}
-      className="fixed top-6 right-6 z-50 p-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-full hover:bg-white/20 transition-all text-white shadow-lg"
+      className="fixed top-5 right-5 z-50 group"
       aria-label="Toggle background music"
+      title={isPlaying ? 'Pause music' : 'Play music'}
     >
-      {isPlaying ? <Volume2 size={24} /> : <VolumeX size={24} />}
+      <div
+        className="relative w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300"
+        style={{
+          background: isPlaying
+            ? 'linear-gradient(135deg, rgba(236,72,153,0.3), rgba(168,85,247,0.3))'
+            : 'rgba(255,255,255,0.07)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          border: isPlaying
+            ? '1px solid rgba(236,72,153,0.4)'
+            : '1px solid rgba(255,255,255,0.12)',
+          boxShadow: isPlaying
+            ? '0 0 20px rgba(236,72,153,0.3), inset 0 1px 0 rgba(255,255,255,0.1)'
+            : '0 4px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.07)',
+        }}
+      >
+        {isPlaying ? (
+          <Volume2 size={18} className="text-pink-300 group-hover:scale-110 transition-transform" />
+        ) : (
+          <VolumeX size={18} className="text-white/50 group-hover:text-white/80 group-hover:scale-110 transition-all" />
+        )}
+
+        {/* Pulse ring when playing */}
+        {isPlaying && (
+          <span className="absolute inset-0 rounded-full border border-pink-500/40 animate-ping" />
+        )}
+      </div>
     </button>
   );
 }
