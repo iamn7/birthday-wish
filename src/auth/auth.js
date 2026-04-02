@@ -1,5 +1,5 @@
-export const EXPECTED_NAME_B64 = "ZHVtYm8="; // "dumbo"
-export const EXPECTED_DATE_B64 = "MDcvMTEvMjAwMA=="; // "07/11/2000"
+export const EXPECTED_NAME_B64 = "Z3Vs"; // "gul"
+export const EXPECTED_DATE_B64 = "MDMvMDQvMjAwMw=="; // "03/04/2003"
 export const MAX_ATTEMPTS = 5;
 
 /**

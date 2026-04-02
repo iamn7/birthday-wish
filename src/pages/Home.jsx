@@ -14,7 +14,7 @@ export default function Home() {
         className="z-10 text-center px-4"
       >
         <h1 className="text-4xl md:text-6xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-pink-200 to-purple-200 drop-shadow-lg">
-          Hey Nuzhat❤️, I made something special for you...
+          Hey Arzoo❤️, I made something special for you...
         </h1>
         <p className="text-xl text-pink-100/80 mb-12">Choose where you'd like to start.</p>
         

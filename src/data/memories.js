@@ -15,7 +15,7 @@ export const memories = [
   },
   {
     id: 3,
-    title: "Going Random Places",
+    title: "Love you jaan",
     caption: "Sitting there next to you, watching the sky and the sorroundings. I realized I was looking at the most beautiful view in front of me... and I don't mean the sunset.",
     image: "/images/memory3.jpeg",
     date: "Beautiful View",

@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { memories } from "../data/memories";
 import { useState, useRef } from "react";
 import { Play, Pause, Music } from "lucide-react";
-import humMilengeAudio from '../assets/audio/Hum-milenge.mp3';
+import humMilengeAudio from '../assets/audio/Bohat.mp3';
 
 export default function Timeline() {
   return (
